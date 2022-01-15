@@ -5,8 +5,8 @@ import docx
 #Function to retreive data
 #Requests function to the Oxford API and returns json text
 def retreive_text(n):
-    app_id = '131c5c9f'
-    app_key = '93c863593eaf2c3b3d04306d37017cae'
+    app_id = 'APP_ID'
+    app_key = 'APP_KEY'
     language = 'en-gb'
     for word in n:
         word_id = str(word)
