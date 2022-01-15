@@ -1,10 +1,10 @@
-import docx
-import  requests
+import requests
 import json
-import python-docx
+import docx
 
-
-def vocab_text(n):
+#Function to retreive data
+#Requests function to the Oxford API and returns json text
+def retreive_text(n):
     app_id = '131c5c9f'
     app_key = '93c863593eaf2c3b3d04306d37017cae'
     language = 'en-gb'
@@ -13,14 +13,35 @@ def vocab_text(n):
         fields = 'definitions'
         url = 'https://od-api.oxforddictionaries.com/api/v2/entries/'  + language + '/' + word_id.lower() + '?fields=' + fields
         r = requests.get(url, headers = {'app_id' : app_id, 'app_key' : app_key})
-        return("text \n" + r.text)
-
-vocab_text(['anonymity'])
-
-def vocab_define():
-    print(vocab_text()
-
-#['Subsume', 'Anonymity', 'Matriarch', 'Emphatically', 'Grovel', 'Benevolent', 'Odious', 'Conceded', 'Solicitous', 'tenacious ', 'Capriciousness', 'Lynched', 'Frivolous', 'Flummoxed', 'Pejorative', 'Quintessential', 'Enebriated', 'Angulation', 'Impetus', 'Loquacious', 'Ravishing', 'Ravenous', 'Huberous', 'Parity', 'Zeal', 'Frivolity', 'Holistic', 'Circumvent', 'Copious', 'Envisaging', 'Contemporaneous', 'Radical', 'Mitigation', 'Bigotry', 'Infatuated', 'Incandescent', 'Ubiquitous', 'Lethargic', 'Mondain', 'Vivisection', 'Premonition', 'Deduction', 'Console', 'Humility', 'Surrealism', 'Ambivalent', 'Mortality', 'Tantalizing', 'Eerily', 'Articulate', 'Temperament', 'Deception', 'Consecrated', 'Visceral', 'Equanimity', 'Competent', 'Cynic', 'Contrition', 'Obstinate', 'Coquette', 'Vulgar', 'Morose', 'Platitude', 'Pretentious', 'Apathy', 'Precocious', 'Bombastic', 'Eminently', 'Bodacious', 'Incendiary', 'Atrocious', 'Fruition', 'Egress', 'Recuse', 'Assail', 'Jaunty', 'Coronary', 'Minajatwa', 'Libation', 'Wayward', 'Unbecoming', 'Insinuating', 'Purgatory', 'Equestrian', 'Innuendo', 'Neolithic', 'Fortuitous', 'Vacilate', 'Advantageous', 'Imbue', 'Ostensibly', 'Judiciously', 'Evanescent', 'Fetid', 'Capacious', 'Ire', 'Vigilant', 'Perturbation', 'Prescient', 'Regal', 'Subservient', 'Feigned', 'Docile', 'Precluded', 'Misnomer', 'Litany', 'Effete', 'Wanton', 'Surreptitiously', 'Cacophony', 'Brooding', 'Recapitulate', 'Formidable', 'Whinge', 'Ostentatiousness', 'Dilenttante', 'Derogatory', 'Egregiously', 'Anonymity', 'Assiduously', 'Chauvinist', 'Contrive', 'Ascribe', 'Invidious', 'Anomie', 'Dismal', 'Monogamous', 'Ardent', 'Phonetically', 'Moratorium', 'Bowuteous', 'Sumptuous', 'Benign', 'Anthology', 'Trite', 'Pestilence', 'Pedantic', 'Animosity', 'Pecuniary', 'Tenacious', 'Levity', 'Brevity', 'Melodic', 'Platonic', 'Apt', 'Jargon', 'Svelte', 'Riven', 'Marquee', 'Covet', 'Modesty', 'Sabbatical', 'Tyranny', 'Sumptuous', 'Insolvent', 'Interlude', 'Eclectic', 'Polyglot', 'Reconsecrate', 'Emissary', 'Chesm', 'Tantalizing', 'Eccentric', 'Dour', 'Atoning', 'Destitute', 'nefarious', 'paternalistic', 'Laborious', 'Contentious', 'Pittance', 'Edifice', 'Hedonistic', 'Destitute', 'Fickle', 'Notoriety', 'Enigmatic', 'Ghoulish', 'Posterity', 'Dilapidated', 'Retribution'])
+        return(str(r.text))
 
 
-mydoc = docx.Document()
+#Function to clean text
+#Takes in the json text and returns the word and the definition of the word
+def clean_text(retreive_text):
+    text = retreive_text
+    dictionary_of_text = json.loads(text)
+    definition = (dictionary_of_text['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0])
+    word = dictionary_of_text['word']
+    return(word, definition)
+
+
+#Function to add text to document
+#Adds the word and definition to word document
+def add_text(clean_text):
+    doc = docx.Document('Vocab.docx')
+    doc.add_heading(clean_text[0], level=1)
+    doc.add_paragraph(clean_text[1])
+    doc.save('Vocab.docx')
+
+
+#Main call function
+def main():
+    words = str(input("Enter the word or words you would like to add to your dictionary separated by commas. \n "))
+    list = words.split(",")
+
+    for word in list:
+        add_text(clean_text(retreive_text([word])))
+
+main()
+
