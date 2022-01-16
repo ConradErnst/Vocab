@@ -16,22 +16,26 @@ def retreive_text(n):
         return(str(r.text))
 
 
+
 #Function to clean text
 #Takes in the json text and returns the word and the definition of the word
 def clean_text(retreive_text):
     text = retreive_text
     dictionary_of_text = json.loads(text)
     definition = (dictionary_of_text['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0])
+    part_of_speech = (dictionary_of_text['results'][0]['lexicalEntries'][0]['lexicalCategory']['id'])
     word = dictionary_of_text['word']
-    return(word, definition)
+    return(definition, part_of_speech, word)
 
 
-#Function to add text to document
-#Adds the word and definition to word document
+
+# Function to add text to document
+# Adds the word and definition to word document
 def add_text(clean_text):
     doc = docx.Document('Vocab.docx')
-    doc.add_heading(clean_text[0], level=1)
+    doc.add_heading(clean_text[2], level=1)
     doc.add_paragraph(clean_text[1])
+    doc.add_paragraph(clean_text[0])
     doc.save('Vocab.docx')
 
 
@@ -44,4 +48,3 @@ def main():
         add_text(clean_text(retreive_text([word])))
 
 main()
-
