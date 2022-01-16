@@ -44,7 +44,10 @@ def main():
     words = str(input("Enter the word or words you would like to add to your dictionary separated by commas. \n "))
     list = words.split(",")
 
-    for word in list:
-        add_text(clean_text(retreive_text([word])))
+    try:
+        for word in list:
+            add_text(clean_text(retreive_text([word])))
 
+    except:
+        print("The word you are searching for is not correctly typed or the tense is unknown, try a different spelling or tense of the word ")
 main()
