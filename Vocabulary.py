@@ -46,7 +46,15 @@ def main():
 
     try:
         for word in list:
-            add_text(clean_text(retreive_text([word])))
+            text = clean_text(retreive_text([word]))
+            print("Word:", text[2])
+            print("Part of speech:", text[1])
+            print("Definition:", text[0])
+            save = str(input("Do you want to save this word to your file? "))
+            if save.lower() == "yes":
+                add_text(text)
+            else:
+                break
 
     except:
         print("The word you are searching for is not correctly typed or the tense is unknown, try a different spelling or tense of the word ")
